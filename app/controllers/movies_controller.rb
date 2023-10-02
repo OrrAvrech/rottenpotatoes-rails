@@ -1,3 +1,5 @@
+require 'byebug'
+
 class MoviesController < ApplicationController
 
   def show
@@ -7,9 +9,8 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @ratings_to_show = Movie.with_ratings(params[:ratings])
-    # @movies = Movie.all
-    @movies = @ratings_to_show
+    @ratings_to_show = params[:ratings].nil? ? [] : params[:ratings]
+    @movies = Movie.with_ratings(@ratings_to_show)
     @all_ratings = Movie.all_ratings
   end
 
