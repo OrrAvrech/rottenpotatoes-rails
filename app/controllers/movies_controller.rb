@@ -15,14 +15,15 @@ class MoviesController < ApplicationController
     @ratings_to_show = params[:ratings].nil? ? [] : params[:ratings].keys
     @rating_hash = Hash[@ratings_to_show.map { |key| [key.to_sym, '1'] }]
 
-    @sort_by = params[:sort_by]
+    @sort_by = params.has_key?(:sort_by) ? (session[:sort_by] = params[:sort_by]) : session[:sort_by]
+    # @sort_by = params[:sort_by]
     case @sort_by
     when "title"
       @title_header = BG_WARNING
     when "release_date"
       @release_date_header = BG_WARNING
     end
-    
+
     @movies = Movie.order(@sort_by).with_ratings(@ratings_to_show)
   end
 
