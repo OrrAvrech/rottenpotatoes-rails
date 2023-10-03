@@ -5,10 +5,10 @@ class Movie < ActiveRecord::Base
   end
 
   def self.with_ratings(ratings_list)
-    # handle nil or empty ratings_list
-    return Movie.all if ratings_list.nil? || ratings_list.empty?
+    # handle empty ratings_list
+    return Movie.all if ratings_list.empty?
 
-    Movie.where(rating: ratings_list.keys.map(&:upcase))
+    Movie.where(rating: ratings_list.map(&:upcase))
   end
 
 end

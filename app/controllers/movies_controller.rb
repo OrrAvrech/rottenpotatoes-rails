@@ -1,3 +1,7 @@
+require 'byebug'
+
+BG_WARNING = "p-3 mb-2 bg-warning text-dark"
+
 class MoviesController < ApplicationController
 
   def show
@@ -7,9 +11,19 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @ratings_to_show = params[:ratings].nil? ? [] : params[:ratings]
-    @movies = Movie.with_ratings(@ratings_to_show)
     @all_ratings = Movie.all_ratings
+    @ratings_to_show = params[:ratings].nil? ? [] : params[:ratings].keys
+    @rating_hash = Hash[@ratings_to_show.map { |key| [key.to_sym, '1'] }]
+
+    @sort_by = params[:sort_by]
+    case @sort_by
+    when "title"
+      @title_header = BG_WARNING
+    when "release_date"
+      @release_date_header = BG_WARNING
+    end
+    
+    @movies = Movie.order(@sort_by).with_ratings(@ratings_to_show)
   end
 
   def new
