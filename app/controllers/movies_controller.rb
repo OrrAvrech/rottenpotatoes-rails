@@ -1,4 +1,4 @@
-BG_WARNING = "p-3 mb-2 bg-warning text-dark"
+BG_WARNING = "\bhilite\b/ +p-3 mb-2 bg-warning text-dark"
 
 class MoviesController < ApplicationController
 
@@ -10,7 +10,7 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.all_ratings
-    @ratings_to_show = params.has_key?(:ratings) ? params[:ratings].keys : []
+    @ratings_to_show = params.has_key?(:ratings) ? params[:ratings].keys : @all_ratings
     @rating_hash = Hash[@ratings_to_show.map { |key| [key.to_sym, '1'] }]
     
     @sort_by = params.has_key?(:sort_by) ? (session[:sort_by] = params[:sort_by]) : session[:sort_by]
