@@ -22,8 +22,9 @@ class MoviesController < ApplicationController
     when "release_date"
       @release_date_header = BG_WARNING
     end
-    
-    session = {ratings: params[:ratings], sort_by: @sort_by}
+
+    session[:ratings] = params[:ratings]
+    session[:sort_by] = @sort_by
     @movies = Movie.order(@sort_by).with_ratings(@ratings_to_show)
   end
 
