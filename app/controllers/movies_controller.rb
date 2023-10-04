@@ -13,7 +13,7 @@ class MoviesController < ApplicationController
     @ratings_to_show = params.has_key?(:ratings) ? params[:ratings].keys : @all_ratings
     @rating_hash = Hash[@ratings_to_show.map { |key| [key.to_sym, '1'] }]
     
-    @sort_by = params.has_key?(:sort_by) ? (session[:sort_by] = params[:sort_by]) : session[:sort_by]
+    @sort_by = params[:sort_by]
     case @sort_by
     when "title"
       @title_header = BG_WARNING
@@ -21,17 +21,18 @@ class MoviesController < ApplicationController
       @release_date_header = BG_WARNING
     end
 
-    if params[:sort_by] != session[:sort_by] && params.has_key?(:sort_by)
-      session[:sort_by] = @sort_by
-      redirect_to movies_path({:ratings => params[:ratings], :sort_by => @sort_by})
+    if params.has_key?(:ratings)
+      session[:ratings] = params[:ratings]
+    end 
+    
+    if params.has_key?(:sort_by)
+      session[:sort_by] = params[:sort_by]
     end
 
-    if params[:ratings] != session[:ratings] && params.has_key?(:ratings)
-      session[:sort_by] = @sort_by
-      session[:ratings] = params[:ratings]
-      redirect_to movies_path({:ratings => params[:ratings], :sort_by => @sort_by})
+    if !params.has_key?(:ratings) || !params.has_key?(:sort_by)
+      redirect_to movies_path({:ratings => session[:ratings], :sort_by => session[:sort_by]})
     end
-    
+
     @movies = Movie.order(@sort_by).with_ratings(@ratings_to_show)
   end
 
