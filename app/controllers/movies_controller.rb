@@ -21,8 +21,17 @@ class MoviesController < ApplicationController
       @release_date_header = BG_WARNING
     end
 
-    session[:ratings] = params[:ratings]
-    session[:sort_by] = @sort_by
+    if params[:sort_by] != session[:sort_by] && params.has_key?(:sort_by)
+      session[:sort_by] = @sort_by
+      redirect_to movies_path({:ratings => params[:ratings], :sort_by => @sort_by})
+    end
+
+    if params[:ratings] != session[:ratings] && params.has_key?(:ratings)
+      session[:sort_by] = @sort_by
+      session[:ratings] = params[:ratings]
+      redirect_to movies_path({:ratings => params[:ratings], :sort_by => @sort_by})
+    end
+    
     @movies = Movie.order(@sort_by).with_ratings(@ratings_to_show)
   end
 
