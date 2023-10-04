@@ -1,5 +1,3 @@
-require 'byebug'
-
 BG_WARNING = "p-3 mb-2 bg-warning text-dark"
 
 class MoviesController < ApplicationController
