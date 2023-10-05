@@ -9,6 +9,12 @@ class MoviesController < ApplicationController
   end
 
   def index
+    if(!params.has_key?(:sort) && !params.has_key?(:ratings))
+      if(session.has_key?(:sort) || session.has_key?(:ratings))
+        redirect_to movies_path(:sort=>session[:sort], :ratings=>session[:ratings])
+      end
+    end
+
     @all_ratings = Movie.all_ratings
     @ratings_to_show = params.has_key?(:ratings) ? params[:ratings].keys : @all_ratings
     @rating_hash = Hash[@ratings_to_show.map { |key| [key.to_sym, '1'] }]
@@ -23,10 +29,6 @@ class MoviesController < ApplicationController
       @title_header = BG_WARNING
     when "release_date"
       @release_date_header = BG_WARNING
-    end
-
-    if !params.has_key?(:ratings) && !params.has_key?(:sort_by)
-      redirect_to movies_path({:ratings => session[:ratings], :sort_by => session[:sort_by]})
     end
 
     @movies = Movie.order(@sort_by).with_ratings(@ratings_to_show)
